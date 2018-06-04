@@ -1,0 +1,89 @@
+ImageRuntimeVersion: v4.0.30319
+Assembly GloveTool, Version=1.0.*, Culture=固定语言(固定国家/地区): 
+	hash=SHA1, flags=PublicKey
+Assembly mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly GloveLibPC, Version=1.0.*, Culture=固定语言(固定国家/地区): 
+	hash=None, flags=None
+Assembly PresentationCore, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35: 
+	hash=None, flags=None
+Assembly Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed: 
+	hash=None, flags=None
+Class GloveTool.Finger: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Single[] Length 'get set' : 
+    Single Mcp_x 'get set' : 
+    Single Mcp_z 'get set' : 
+    Single Pip 'get set' : 
+    Single Dip 'get set' : 
+  Methods:
+    get_Length(): PrivateScope, Public, HideBySig, SpecialName
+    set_Length(Single[]): PrivateScope, Public, HideBySig, SpecialName
+    get_Mcp_x(): PrivateScope, Public, HideBySig, SpecialName
+    set_Mcp_x(Single): PrivateScope, Public, HideBySig, SpecialName
+    get_Mcp_z(): PrivateScope, Public, HideBySig, SpecialName
+    set_Mcp_z(Single): PrivateScope, Public, HideBySig, SpecialName
+    get_Pip(): PrivateScope, Public, HideBySig, SpecialName
+    set_Pip(Single): PrivateScope, Public, HideBySig, SpecialName
+    get_Dip(): PrivateScope, Public, HideBySig, SpecialName
+    set_Dip(Single): PrivateScope, Public, HideBySig, SpecialName
+Class GloveTool.HandInf: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Single global_x 'get set' : 
+    Single global_y 'get set' : 
+    Single global_z 'get set' : 
+    Single global_yaw_z 'get set' : 
+    Single global_pitch_y 'get set' : 
+    Single global_roll_x 'get set' : 
+    GloveTool.Finger[] fingers 'get set' : 
+  Methods:
+    get_global_x(): PrivateScope, Public, HideBySig, SpecialName
+    set_global_x(Single): PrivateScope, Public, HideBySig, SpecialName
+    get_global_y(): PrivateScope, Public, HideBySig, SpecialName
+    set_global_y(Single): PrivateScope, Public, HideBySig, SpecialName
+    get_global_z(): PrivateScope, Public, HideBySig, SpecialName
+    set_global_z(Single): PrivateScope, Public, HideBySig, SpecialName
+    get_global_yaw_z(): PrivateScope, Public, HideBySig, SpecialName
+    set_global_yaw_z(Single): PrivateScope, Public, HideBySig, SpecialName
+    get_global_pitch_y(): PrivateScope, Public, HideBySig, SpecialName
+    set_global_pitch_y(Single): PrivateScope, Public, HideBySig, SpecialName
+    get_global_roll_x(): PrivateScope, Public, HideBySig, SpecialName
+    set_global_roll_x(Single): PrivateScope, Public, HideBySig, SpecialName
+    get_fingers(): PrivateScope, Public, HideBySig, SpecialName
+    set_fingers(Finger[]): PrivateScope, Public, HideBySig, SpecialName
+    GetSingleton(): PrivateScope, Public, Static, HideBySig
+    ToJson(): PrivateScope, Public, HideBySig
+Class GloveTool.GloveModel: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Fields:
+    System.Net.IPAddress ip : Public
+    GloveLib.GloveController gc : Public
+    GloveLib.SkeletonJson fram : Public
+    System.String skeletonJson : Public
+    GloveTool.HandInf handinformation : Public
+    System.Net.Sockets.Socket serverSocket : Public, Static
+    GloveLib.HandType handType : Public, Static
+  Properties:
+    System.String Mychuankou 'get set' : 
+    Boolean CloseSocket 'get set' : 
+  Methods:
+    GetSingleton(): PrivateScope, Public, Static, HideBySig
+    DestoryInstance(): PrivateScope, Public, Static, HideBySig
+    get_Mychuankou(): PrivateScope, Public, HideBySig, SpecialName
+    set_Mychuankou(String): PrivateScope, Public, HideBySig, SpecialName
+    get_CloseSocket(): PrivateScope, Public, HideBySig, SpecialName
+    set_CloseSocket(Boolean): PrivateScope, Public, HideBySig, SpecialName
+    Conected(): PrivateScope, Public, HideBySig
+    GetData(): PrivateScope, Public, HideBySig
+    SetSocket(): PrivateScope, Public, HideBySig
+    CloseGloveModel(): PrivateScope, Public, HideBySig
+    SendSkeleton(): PrivateScope, Public, HideBySig
+    SendHandInf(): PrivateScope, Public, HideBySig
+    QtoE(Quaternion): PrivateScope, Public, HideBySig
+    EtoQ(Double, Double, Double): PrivateScope, Public, HideBySig
+    QtoE_glove_to_model(Quaternion): PrivateScope, Public, HideBySig
+    SkeletonJsonToHandinf(SkeletonJson): PrivateScope, Public, HideBySig
