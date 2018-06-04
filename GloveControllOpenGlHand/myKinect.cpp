@@ -9,7 +9,9 @@ myKinect::myKinect():
 	mycolorReader(NULL),
 	myBodyReader(NULL),
 	myBodySource(NULL),
-	myMapper(NULL) {}
+	myMapper(NULL) {
+	this->HandsegmentMat = Mat::zeros(424,512,CV_16UC1);
+}
 
 
 myKinect::~myKinect()
@@ -263,7 +265,7 @@ void myKinect::Collectdata()
 		//在颜色分割后这里应该有一个轮廓检测，提取最大轮廓；
 
 		//赋值给HandsegmentMat 作为传出的数据；
-		Mat HandsegmentMat = cv::Mat::zeros(424, 512, CV_16UC1);
+		this->HandsegmentMat.setTo(0);
 		for (int i = 0; i < 424; i++)
 		{
 			for (int j = 0; j < 512; j++)

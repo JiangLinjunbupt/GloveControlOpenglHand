@@ -98,6 +98,7 @@ public:
 		model->set_one_rotation(p_index_middle, 3);
 		model->set_one_rotation(p_index_top, 4);
 
+
 		model->forward_kinematic();
 		model->compute_mesh();
 	}

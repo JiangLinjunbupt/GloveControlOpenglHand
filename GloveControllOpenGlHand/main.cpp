@@ -84,25 +84,6 @@ void mouseClick(int button, int state, int x, int y) {
 }
 
 /* executed when the mouse moves to position ('x', 'y') */
-void logo() {
-	glRasterPos2i(100, 100);
-	glColor3d(0.0, 0.0, 1.0);
-	const unsigned char kurff0[] = "kurff";
-	glutBitmapString(GLUT_BITMAP_HELVETICA_18, kurff0);
-	glRasterPos2i(-100, 100);
-	glColor3d(0.0, 1.0, 0.0);  //(red ,green ,blue)
-	const unsigned char kurff1[] = "kurff";
-	glutBitmapString(GLUT_BITMAP_HELVETICA_18, kurff1);
-	glRasterPos2i(100, -100);
-	glColor3d(1.0, 0.0, 0.0);
-	const unsigned char kurff2[] = "kurff";
-	glutBitmapString(GLUT_BITMAP_HELVETICA_18, kurff2);
-	glRasterPos2i(-100, -100);
-	glColor3d(1.0, 1.0, 0);
-	const unsigned char kurff3[] = "kurff";
-	glutBitmapString(GLUT_BITMAP_HELVETICA_18, kurff3);
-}
-
 /* render the scene */
 void draw() {
 
@@ -120,9 +101,22 @@ void draw() {
 	//cout<< x <<" "<< y <<" " << z<<endl;
 	gluLookAt(x + control.gx, y + control.gy, z + control.gz, control.gx, control.gy, control.gz, 0.0, 1.0, 0.0);//个人理解最开始是看向-z的，之后的角度是在global中心上叠加的，所以要加
 
-	logo();
+
+	//画点云，必须放最前面，要是放后面会出错。为什么我也没找到~
+	if (pointcloud.pointcloud_vector.size() > 0)
+	{
+		glPointSize(2);
+		glBegin(GL_POINTS);
+		glColor3d(1.0, 0.0, 0.0);
+		cout << "the pointcloud size : " << pointcloud.pointcloud_vector.size() << endl;
+		for (int i = 0;i < pointcloud.pointcloud_vector.size();i++)
+		{
+			glVertex3f(pointcloud.pointcloud_vector[i].x, pointcloud.pointcloud_vector[i].y, pointcloud.pointcloud_vector[i].z);
+		}
+		glEnd;
+	}
 	/* render the scene here */
-	//glColor3d(1.0,1.0,1.0);
+	glColor3d(1.0,1.0,1.0);
 	if (config.show_point) {
 		glPointSize(2);
 		glBegin(GL_POINTS);
@@ -176,14 +170,6 @@ void draw() {
 	}
 
 	//画深度图转换成的点云的点
-	glPointSize(2);
-	glBegin(GL_POINTS);
-	glColor3d(1.0, 0.0, 0.0);
-	for (int i = 0;i < pointcloud.pointcloud_vector.size();i++)
-	{
-		glVertex3d(pointcloud.pointcloud_vector[i].x, pointcloud.pointcloud_vector[i].y, pointcloud.pointcloud_vector[i].z);
-	}
-	glEnd;
 
 
 	glFlush();
@@ -201,9 +187,15 @@ void mouseMotion(int x, int y) {
 
 /* executed when program is idle */
 void idle() {
-	glovedata.GloveControlHand();
 	mykinect.Collectdata();
 	pointcloud.DepthMatToPointCloud(mykinect.HandsegmentMat);
+
+	Pose pose(0, 0, 0);
+	pose.x = pointcloud.PointCloud_center_x; pose.y = pointcloud.PointCloud_center_y; pose.z = pointcloud.PointCloud_center_z;
+	model->set_global_position(pose);
+	model->set_global_position_center(pose);
+
+	glovedata.GloveControlHand();
 
 	_data.set(model->vertices_update_, model->faces_);
 	_data.set_color(model->weight_);
@@ -233,6 +225,7 @@ void main(int argc, char** argv) {
 	model = new Model(".\\model\\HandBase.bvh");
 	model->init();
 
+	pointcloud.pointcloud_vector.clear();
 
 	_data.init(model->vertices_.rows(), model->faces_.rows());
 	_data.set(model->vertices_update_, model->faces_);
