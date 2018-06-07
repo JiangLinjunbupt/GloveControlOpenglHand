@@ -31,6 +31,7 @@ public:
 	void set_global_position(Pose global_position);
 	void set_global_position_center(Pose global_position);
 	void set_hand_rotation(Pose pose);
+	void set_thumbLower_rotation(Pose pose);
 	void transform_matrix(Pose pose, Eigen::MatrixXd& rot);
 	void compute_global();
 

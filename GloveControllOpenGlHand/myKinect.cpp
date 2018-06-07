@@ -132,7 +132,6 @@ void myKinect::Collectdata()
 		//inRange(hsv, Scalar(155, 43, 35), Scalar(180, 255, 255), bw2);
 		//inRange(hsv, Scalar(0, 43, 35), Scalar(11, 255, 255), bw3);
 		//bw = bw3 + bw2;        //红色
-
 		inRange(hsv, Scalar(0, 0, 0), Scalar(255, 255, 255), bw);  //所有颜色
 	}
 	if (mydepthReader->AcquireLatestFrame(&mydepthFrame) == S_OK) {
@@ -262,22 +261,49 @@ void myKinect::Collectdata()
 		//	}
 		//}
 
-		//在颜色分割后这里应该有一个轮廓检测，提取最大轮廓；
+		//在颜色分割后这里应该有一个轮廓检测，提取最大轮廓；//这里采用颜色分割似乎也有一些问题。
+		vector<vector<Point> > contours;
+		vector<Vec4i> hierarchy;
 
-		//赋值给HandsegmentMat 作为传出的数据；
-		this->HandsegmentMat.setTo(0);
-		for (int i = 0; i < 424; i++)
+		//寻找轮廓    
+		findContours(m_middepth8u, contours, hierarchy, CV_RETR_CCOMP, CHAIN_APPROX_NONE);
+		// 找到最大的轮廓    
+		int index;
+		double area, maxArea(0);
+		for (int i = 0; i < contours.size(); i++)
 		{
-			for (int j = 0; j < 512; j++)
+			area = contourArea(Mat(contours[i]));
+			if (area > maxArea)
 			{
-				if (m_middepth8u.at<uchar>(i, j) != 0)
-				{
-					HandsegmentMat.at<ushort>(i, j) = original_depth_16U.at<ushort>(i, j);
-				}
+				maxArea = area;
+				index = i;
 			}
 		}
+		this->HandsegmentMat.setTo(0);
+		if (index >= 0)
+		{
+			Mat Max_contour = Mat::zeros(424, 512, CV_8UC1);  // 2值掩膜 
+			drawContours(Max_contour, contours, index, Scalar(255), CV_FILLED);
 
-		medianBlur(HandsegmentMat, HandsegmentMat, 5);
+			//赋值给HandsegmentMat 作为传出的数据；
+			for (int i = 0; i < 424; i++)
+			{
+				for (int j = 0; j < 512; j++)
+				{
+					if (Max_contour.at<uchar>(i, j) != 0)
+					{
+						HandsegmentMat.at<ushort>(i, j) = original_depth_16U.at<ushort>(i, j);
+					}
+					else
+					{
+						m_middepth8u.at<uchar>(i, j) = 0;
+					}
+				}
+			}
+
+			medianBlur(HandsegmentMat, HandsegmentMat, 5);
+		}
+		
 
 		imshow("m_middepth8u", m_middepth8u);
 		//delete[] bodyArray;

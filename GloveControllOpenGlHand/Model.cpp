@@ -345,6 +345,31 @@ void Model::forward_kinematic() {
 		joint->global_position[1] = I(1, 0) + global_position_.y;
 		joint->global_position[2] = I(2, 0) + global_position_.z;
 	}
+
+
+	for (int i = 0; i < number_joint; i++) {
+
+		BVH::Joint* joint_handbone = bvh_.GetJoint(1);
+		BVH::Joint* joint = bvh_.GetJoint(i);
+		t = Eigen::MatrixXd(4, 1);
+		t(0, 0) = joint_handbone->init_global_position[0];
+		t(1, 0) = joint_handbone->init_global_position[1];
+		t(2, 0) = joint_handbone->init_global_position[2];
+		t(3, 0) = 1; /////joint->scale*
+					 /*Eigen::MatrixXd SCALE = Eigen::MatrixXd::Identity(4, 4);
+					 SCALE(0, 0) = joint->scale;
+					 SCALE(1, 1) = joint->scale;
+					 SCALE(2, 2) = joint->scale;*/
+
+		I = joint_handbone->global* (joint_handbone->scale*((joint_handbone->local_inverse)*t));
+		//I = joint->global* (SCALE*((joint->local_inverse)*t));
+		joint->global_position[0] = joint->global_position[0] - I(0,0);
+		joint->global_position[1] = joint->global_position[1] - I(1,0);
+		joint->global_position[2] = joint->global_position[2] - I(2,0);
+	}
+
+
+
 }
 
 
@@ -437,6 +462,37 @@ void Model::set_hand_rotation(Pose pose)
 
 	joint->rotation = x*y*z*z0; //Ðý×ªË³Ðò z-y-x
 }
+
+void Model::set_thumbLower_rotation(Pose pose)
+{
+	BVH::Joint *joint = bvh_.GetJoint(18);
+
+	Eigen::MatrixXd x = Eigen::MatrixXd::Identity(4, 4);
+	Eigen::MatrixXd y = Eigen::MatrixXd::Identity(4, 4);
+	Eigen::MatrixXd z = Eigen::MatrixXd::Identity(4, 4);
+
+	double cx = cos(-pose.y / 180 * PI);
+	double sx = sin(-pose.y / 180 * PI);
+
+	double cy = cos(pose.x / 180 * PI);
+	double sy = sin(pose.x / 180 * PI);
+
+	double cz = cos(pose.z / 180 * PI);
+	double sz = sin(pose.z / 180 * PI);
+
+	x(1, 1) = cx;x(2, 2) = cx;
+	x(1, 2) = -sx;x(2, 1) = sx;
+
+	y(0, 0) = cy;y(0, 2) = sy;
+	y(2, 0) = -sy;y(2, 2) = cy;
+
+	z(0, 0) = cz;z(1, 1) = cz;
+	z(0, 1) = -sz;z(1, 0) = sz;
+
+	joint->rotation = x*y*z; //Ðý×ªË³Ðò z-y-x
+
+}
+
 void Model::set_rotation(Pose* pose) {
 	int number_joint = bvh_.GetNumJoint();
 	for (int i = 0; i < number_joint; i++) {
@@ -641,10 +697,24 @@ void Model::compute_mesh() {
 	}
 	vertices_update_ = t.transpose();
 	//cout<<vertices_update_;
+
+	BVH::Joint* joint_handbone = bvh_.GetJoint(1);
+	t = Eigen::MatrixXd(4, 1);
+	t(0, 0) = joint_handbone->init_global_position[0];
+	t(1, 0) = joint_handbone->init_global_position[1];
+	t(2, 0) = joint_handbone->init_global_position[2];
+	t(3, 0) = 1; /////joint->scale*
+				 /*Eigen::MatrixXd SCALE = Eigen::MatrixXd::Identity(4, 4);
+				 SCALE(0, 0) = joint->scale;
+				 SCALE(1, 1) = joint->scale;
+				 SCALE(2, 2) = joint->scale;*/
+	Eigen::MatrixXd I;
+	I = joint_handbone->global* (joint_handbone->scale*((joint_handbone->local_inverse)*t));
+
 	for (int i = 0; i < vertices_update_.rows(); i++) {
-		vertices_update_(i, 0) += global_position_.x;
-		vertices_update_(i, 1) += global_position_.y;
-		vertices_update_(i, 2) += global_position_.z;
+		vertices_update_(i, 0) += global_position_.x - I(0,0);
+		vertices_update_(i, 1) += global_position_.y - I(1,0);
+		vertices_update_(i, 2) += global_position_.z - I(2,0);
 	}
 	//cout<<vertices_update_;
 }

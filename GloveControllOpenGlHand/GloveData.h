@@ -18,7 +18,7 @@ public:
 		gm->Mychuankou = "COM3";
 		gm->Conected();
 		gm->SetSocket();
-		HandinfParams = new float[18];
+		HandinfParams = new float[19];
 	}
 	~GloveData() { 
 		delete HandinfParams;
@@ -38,6 +38,7 @@ public:
 		HandinfParams[15] = gm->handinformation->global_roll_x;
 		HandinfParams[16] = gm->handinformation->global_pitch_y;
 		HandinfParams[17] = gm->handinformation->global_yaw_z;
+		HandinfParams[18] = gm->handinformation->fingers[4]->Dip;
 	}
 
 	void GloveControlHand()
@@ -47,10 +48,13 @@ public:
 		Pose p_globle(this->HandinfParams[15], this->HandinfParams[16], this->HandinfParams[17]);
 		model->set_hand_rotation(p_globle);
 
-		Pose p_thumb_lower(0, this->HandinfParams[12] + 40, this->HandinfParams[13] - 10);
+		//Pose p_thumb_lower(0, this->HandinfParams[12] + 40, this->HandinfParams[13] - 10);
+		Pose p_thumb_lower(this->HandinfParams[12] + 40, this->HandinfParams[18], this->HandinfParams[13] - 10);
 		Pose p_thumb_middle(0, 0.66*this->HandinfParams[14], 0);
 		Pose p_thumb_top(0, this->HandinfParams[14], 0);
-		model->set_one_rotation(p_thumb_lower, 18);
+
+		model->set_thumbLower_rotation(p_thumb_lower);
+		//model->set_one_rotation(p_thumb_lower, 18);
 		model->set_one_rotation(p_thumb_middle, 19);
 		model->set_one_rotation(p_thumb_top, 20);
 

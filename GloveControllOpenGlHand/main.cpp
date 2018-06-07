@@ -102,18 +102,18 @@ void draw() {
 	gluLookAt(x + control.gx, y + control.gy, z + control.gz, control.gx, control.gy, control.gz, 0.0, 1.0, 0.0);//个人理解最开始是看向-z的，之后的角度是在global中心上叠加的，所以要加
 
 
-	//画点云，必须放最前面，要是放后面会出错。为什么我也没找到~
+	//画点云，必须放最前面，要是放后面会出错。为什么我也没找到~   -------原因：以前glEnd没加(),程序不会报错，但是运行结果不对。；
 	if (pointcloud.pointcloud_vector.size() > 0)
 	{
 		glPointSize(2);
 		glBegin(GL_POINTS);
-		glColor3d(1.0, 0.0, 0.0);
-		cout << "the pointcloud size : " << pointcloud.pointcloud_vector.size() << endl;
+		glColor3d(0.0, 1.0, 0.0);
+		//cout << "the pointcloud size : " << pointcloud.pointcloud_vector.size() << endl;
 		for (int i = 0;i < pointcloud.pointcloud_vector.size();i++)
 		{
 			glVertex3f(pointcloud.pointcloud_vector[i].x, pointcloud.pointcloud_vector[i].y, pointcloud.pointcloud_vector[i].z);
 		}
-		glEnd;
+		glEnd();
 	}
 	/* render the scene here */
 	glColor3d(1.0,1.0,1.0);
