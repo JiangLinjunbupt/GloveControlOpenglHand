@@ -7,10 +7,12 @@
 #include "myKinect.h"
 #include "GloveData.h"
 #include "PointCloud.h"
+#include "Projection.h"
 VisData _data;
 Config config;
 Control control;
 
+void MixShowResult(cv::Mat input1, cv::Mat input2);
 
 #pragma region OpenGL
 
@@ -197,6 +199,11 @@ void idle() {
 
 	glovedata.GloveControlHand();
 
+
+	cv::Mat generated_mat = cv::Mat::zeros(424,512, CV_16UC1);
+	projection->project_3d_to_2d_(model, generated_mat);
+	MixShowResult(mykinect.HandsegmentMat, generated_mat);
+
 	_data.set(model->vertices_update_, model->faces_);
 	_data.set_color(model->weight_);
 	_data.set_skeleton(model);
@@ -269,5 +276,56 @@ void main(int argc, char** argv) {
 	glutMainLoop();
 
 #pragma endregion
+
+}
+
+
+
+void MixShowResult(cv::Mat input1, cv::Mat input2)
+{
+	int height = input2.rows;
+	int width = input2.cols;
+	cv::Mat colored_input1 = cv::Mat::zeros(height, width, CV_8UC3);
+	cv::Mat colored_input2 = cv::Mat::zeros(height, width, CV_8UC3);
+	cv::Mat dst;
+	for (int i = 0; i < height; i++)
+	{
+		for (int j = 0; j < width; j++)
+		{
+			if (input1.at<ushort>(i, j) != 0)
+			{
+				colored_input1.at < cv::Vec3b>(i, j)[0] = 0;
+				colored_input1.at < cv::Vec3b>(i, j)[1] = 0;
+				colored_input1.at < cv::Vec3b>(i, j)[2] = 255;
+			}
+			else
+			{
+
+				colored_input1.at < cv::Vec3b>(i, j)[0] = 255;
+				colored_input1.at < cv::Vec3b>(i, j)[1] = 255;
+				colored_input1.at < cv::Vec3b>(i, j)[2] = 255;
+
+			}
+
+			if (input2.at<ushort>(i, j) != 0)
+			{
+				colored_input2.at < cv::Vec3b>(i, j)[0] = 0;
+				colored_input2.at < cv::Vec3b>(i, j)[1] = 255;
+				colored_input2.at < cv::Vec3b>(i, j)[2] = 0;
+			}
+			else
+			{
+
+				colored_input2.at < cv::Vec3b>(i, j)[0] = 255;
+				colored_input2.at < cv::Vec3b>(i, j)[1] = 255;
+				colored_input2.at < cv::Vec3b>(i, j)[2] = 255;
+
+			}
+
+		}
+	}
+
+	cv::addWeighted(colored_input1, 0.5, colored_input2, 0.5, 0.0, dst);
+	cv::imshow("Mixed Result", dst);
 
 }

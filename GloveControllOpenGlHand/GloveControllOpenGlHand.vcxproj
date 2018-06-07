@@ -154,6 +154,7 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="myKinect.h" />
     <ClInclude Include="PointCloud.h" />
+    <ClInclude Include="Projection.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="Viewer.h" />
   </ItemGroup>

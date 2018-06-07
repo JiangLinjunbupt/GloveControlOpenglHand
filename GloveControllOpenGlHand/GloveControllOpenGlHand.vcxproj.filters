@@ -39,6 +39,9 @@
     <ClInclude Include="PointCloud.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Projection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BVH.cpp">
