@@ -201,6 +201,7 @@ void idle() {
 
 
 	cv::Mat generated_mat = cv::Mat::zeros(424,512, CV_16UC1);
+	projection->set_color_index(model);
 	projection->project_3d_to_2d_(model, generated_mat);
 	MixShowResult(mykinect.HandsegmentMat, generated_mat);
 
