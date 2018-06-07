@@ -573,6 +573,34 @@ D:\opencv3.2\opencv\build\include\opencv2/imgproc.hpp(592): warning C4819: 该�
 d:\github\glovecontrolopenglhand\glovecontrollopenglhand\Projection.h(181): warning C4018: “<”: 有符号/无符号不匹配
 d:\github\glovecontrolopenglhand\glovecontrollopenglhand\Projection.h(192): warning C4018: “<”: 有符号/无符号不匹配
 main.cpp(114): warning C4018: “<”: 有符号/无符号不匹配
+  myKinect.cpp
+D:\opencv3.2\opencv\build\include\opencv2/core/mat.hpp(2586): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\opencv3.2\opencv\build\include\opencv2/core/persistence.hpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\opencv3.2\opencv\build\include\opencv2/core/utility.hpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\opencv3.2\opencv\build\include\opencv2/core/utility.hpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\opencv3.2\opencv\build\include\opencv2/imgproc.hpp(592): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+myKinect.cpp(275): warning C4018: “<”: 有符号/无符号不匹配
+  正在生成代码...
+d:\opencv3.2\opencv\build\include\opencv2\core\cvstd.hpp(596): warning C4793: “cv::String::String”: 编译为本机的函数:
+  	托管代码中发现一个不受支持的内部函数
+d:\opencv3.2\opencv\build\include\opencv2\core\cuda.inl.hpp(105): warning C4793: “cv::cuda::GpuMat::GpuMat”: 编译为本机的函数:
+  	托管代码中发现一个不受支持的内部函数
+d:\opencv3.2\opencv\build\include\opencv2\core\cuda.inl.hpp(395): warning C4793: “cv::cuda::HostMem::HostMem”: 编译为本机的函数:
+  	托管代码中发现一个不受支持的内部函数
+d:\opencv3.2\opencv\build\include\opencv2\core\mat.inl.hpp(413): warning C4793: “cv::Mat::Mat”: 编译为本机的函数:
+  	托管代码中发现一个不受支持的内部函数
+d:\opencv3.2\opencv\build\include\opencv2\core\mat.inl.hpp(703): warning C4793: “cv::Mat::release”: 编译为本机的函数:
+  	托管代码中发现一个不受支持的内部函数
+d:\opencv3.2\opencv\build\include\opencv2\core\mat.inl.hpp(1929): warning C4793: “cv::SparseMat::addref”: 编译为本机的函数:
+  	托管代码中发现一个不受支持的内部函数
+d:\opencv3.2\opencv\build\include\opencv2\core\mat.inl.hpp(3530): warning C4793: “cv::UMat::addref”: 编译为本机的函数:
+  	托管代码中发现一个不受支持的内部函数
+d:\opencv3.2\opencv\build\include\opencv2\core\ptr.inl.hpp(67): warning C4793: “cv::detail::PtrOwner::incRef”: 编译为本机的函数:
+  	托管代码中发现一个不受支持的内部函数
+d:\opencv3.2\opencv\build\include\opencv2\core\ptr.inl.hpp(72): warning C4793: “cv::detail::PtrOwner::decRef”: 编译为本机的函数:
+  	托管代码中发现一个不受支持的内部函数
+d:\opencv3.2\opencv\build\include\opencv2\core\cvstd.hpp(673): warning C4793: “cv::String::operator=”: 编译为本机的函数:
+  	托管代码中发现一个不受支持的内部函数
 d:\opencv3.2\opencv\build\include\opencv2\core\cvstd.hpp(596): warning C4793: “cv::String::String”: 编译为本机的函数:
   	托管代码中发现一个不受支持的内部函数
 d:\opencv3.2\opencv\build\include\opencv2\core\cuda.inl.hpp(105): warning C4793: “cv::cuda::GpuMat::GpuMat”: 编译为本机的函数:

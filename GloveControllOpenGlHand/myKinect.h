@@ -38,6 +38,21 @@ public:
 	void Collectdata();
 
 	cv::Mat HandsegmentMat;
+
+	Mat original_depth_16U;    //½¨Á¢Í¼Ïñ¾ØÕó
+	UINT16 *depthData = new UINT16[424 * 512];
+
+	Mat copy_original_depth_16U;    //½¨Á¢Í¼Ïñ¾ØÕó
+	Mat m_middepth8u;
+
+	ColorSpacePoint *m_pcolorcoordinate;
+	CameraSpacePoint *m_pcameracoordinate;
+
+	Mat image_color;
+	Mat hsv;
+	Mat bw;
+	Mat bw2;
+	Mat bw3;
 };
 
 

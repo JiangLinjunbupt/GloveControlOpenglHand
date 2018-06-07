@@ -11,6 +11,22 @@ myKinect::myKinect():
 	myBodySource(NULL),
 	myMapper(NULL) {
 	this->HandsegmentMat = Mat::zeros(424,512,CV_16UC1);
+
+
+	this->original_depth_16U = Mat::zeros(cDepthHeight, cDepthWidth, CV_16UC1);    //建立图像矩阵
+	this->depthData = new UINT16[424 * 512];
+
+	this->copy_original_depth_16U = Mat::zeros(cDepthHeight, cDepthWidth, CV_16UC1);    //建立图像矩阵
+	this->m_middepth8u = Mat::zeros(424, 512, CV_8UC1);
+
+	this->m_pcolorcoordinate = new ColorSpacePoint[512 * 424];
+	this->m_pcameracoordinate = new CameraSpacePoint[512 * 424];
+
+	this->image_color = Mat::zeros(1080, 1920, CV_8UC4);
+	this->hsv = Mat::zeros(1080, 1920, CV_8UC1);
+	this->bw = Mat::zeros(1080, 1920, CV_8UC1);
+	this->bw2 = Mat::zeros(1080, 1920, CV_8UC1);
+	this->bw3 = Mat::zeros(1080, 1920, CV_8UC1);
 }
 
 
@@ -96,20 +112,6 @@ HRESULT myKinect::InitializeDefaultSensor()
 
 void myKinect::Collectdata()
 {
-	Mat original_depth_16U(cDepthHeight, cDepthWidth, CV_16UC1);    //建立图像矩阵
-	UINT16 *depthData = new UINT16[424 * 512];
-
-	Mat copy_original_depth_16U(cDepthHeight, cDepthWidth, CV_16UC1);    //建立图像矩阵
-	Mat m_middepth8u(424, 512, CV_8UC1);
-	
-	ColorSpacePoint *m_pcolorcoordinate = new ColorSpacePoint[512 * 424];
-	CameraSpacePoint *m_pcameracoordinate = new CameraSpacePoint[512 * 424];
-
-	Mat image_color(1080, 1920, CV_8UC4);
-	Mat hsv;
-	Mat bw(1080, 1920, CV_8UC1);
-	Mat bw2(1080, 1920, CV_8UC1);
-	Mat bw3(1080, 1920, CV_8UC1);
 
 	//如果丢失了kinect，则不继续操作
 	if (!mydepthReader)
