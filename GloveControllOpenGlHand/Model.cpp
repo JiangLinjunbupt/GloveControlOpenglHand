@@ -235,32 +235,6 @@ void Model::set_upper_lower_bound() {
 
 }
 
-void Model::save_upper_lower_of_angle(string file) {
-	ofstream fo(file, ios::out);
-	fo << global_position_center_.x << " " << global_position_center_.y << " "
-		<< global_position_center_.z;
-	Pose upper, lower;
-
-	for (int i = 0; i < get_number_of_joint(); ++i) {
-		upper = get_upper_of_angle(i);
-		lower = get_lower_of_angle(i);
-		bool* dof = get_dof(i);
-		if (dof[0] == true) {
-			fo << " " << lower.x << " " << upper.x;
-		}
-		if (dof[1] == true) {
-			fo << " " << lower.y << " " << upper.y;
-		}
-		if (dof[2] == true) {
-			fo << " " << lower.z << " " << upper.z;
-		}
-	}
-
-
-	fo.close();
-
-}
-
 
 void Model::compute_local_inverse() {
 	int num_joint = bvh_.GetNumJoint();
@@ -287,7 +261,6 @@ void Model::init() {
 	Pose pose(0, 0, 0);
 	pose.x = 0; pose.y = 0; pose.z = -200;
 	this->set_global_position(pose);
-	this->set_global_position_center(pose);
 
 	this->forward_kinematic();
 	this->compute_mesh();
@@ -372,19 +345,10 @@ void Model::forward_kinematic() {
 
 }
 
-
-
 void Model::set_global_position(Pose global_position) {
 	global_position_.x = global_position.x;
 	global_position_.y = global_position.y;
 	global_position_.z = global_position.z;
-}
-
-void Model::set_global_position_center(Pose global_position) {
-	global_position_center_.x = global_position.x;
-	global_position_center_.y = global_position.y;
-	global_position_center_.z = global_position.z;
-
 }
 
 void Model::compute_global() {
@@ -493,15 +457,6 @@ void Model::set_thumbLower_rotation(Pose pose)
 
 }
 
-void Model::set_rotation(Pose* pose) {
-	int number_joint = bvh_.GetNumJoint();
-	for (int i = 0; i < number_joint; i++) {
-		BVH::Joint* joint = bvh_.GetJoint(i);
-		joint->pose = pose[i];
-		transform_matrix(joint->pose, joint->rotation);
-	}
-}
-
 void Model::compute_parent_child_transform() {
 	int number_joint = bvh_.GetNumJoint();
 	for (int i = 0; i < number_joint; i++) {
@@ -583,24 +538,6 @@ void Model::compute_init_global_position() {
 	}
 }
 
-
-void Model::set_one_target_position(double target_position[3], int index) {
-	BVH::Joint* joint = bvh_.GetJoint(index);
-	joint->target_position[0] = target_position[0];
-	joint->target_position[1] = target_position[1];
-	joint->target_position[2] = target_position[2];
-}
-void Model::set_target_position(double target_position[NUM_JOINT * 3], bool visiable[NUM_JOINT]) {
-
-	for (int i = 0; i < bvh_.GetNumJoint(); i++) {
-		BVH::Joint* joint = bvh_.GetJoint(i);
-		joint->target_position[0] = target_position[3 * i];
-		joint->target_position[1] = target_position[3 * i + 1];
-		joint->target_position[2] = target_position[3 * i + 2];
-	}
-
-}
-
 void Model::load_faces(char* file) {
 	ifstream f;
 	f.open(file, ios::in);
@@ -630,27 +567,6 @@ void Model::load_vertices(char* file) {
 	}
 	f.close();
 	//cout<< vertices_;
-}
-
-void Model::load_weight_0(char* file) {
-	fstream f;
-	f.open(file, ios::in);
-	int number = 0;
-	f >> num_vertices_ >> number;
-	int x = 0, y = 0;
-	int num_joint = bvh_.GetNumJoint();
-	assert(num_joint != number);
-	weight_ = Eigen::MatrixXd::Zero(num_vertices_, number);
-	double weight;
-	for (int i = 0; i < num_vertices_; i++) {
-		for (int j = 0; j<number; j++) {
-			f >> weight;
-			weight_(i, j) = weight;
-		}
-	}
-	//cout<<weight_;
-	f.close();
-
 }
 
 void Model::load_weight(char* file) {
@@ -723,56 +639,52 @@ void Model::compute_mesh() {
 /////////////////////////////////////////
 
 
-void Model::save(char* file) {
-	ofstream f;
-	f.open(file, ios::out);
-	int number_joint = bvh_.GetNumJoint();
-	for (int i = 0; i < number_joint; i++) {
-		f << bvh_.GetJoint(i)->global_position[0] << " "
-			<< bvh_.GetJoint(i)->global_position[1] << " " <<
-			bvh_.GetJoint(i)->global_position[2] << endl;
-	}
-	f.close();
-}
+void Model::GloveParamsConTrollHand(float *handinf)
+{
 
-void Model::save2(char* file) {
-	ofstream f;
-	f.open(file, ios::out);
-	int number_joint = bvh_.GetNumJoint();
-	for (int i = 0; i < number_joint; i++) {
-		f << bvh_.GetJoint(i)->init_global_position[0] << " "
-			<< bvh_.GetJoint(i)->init_global_position[1] << " " <<
-			bvh_.GetJoint(i)->init_global_position[2] << endl;
-	}
-	f.close();
-}
+	Pose global_positon(handinf[24], handinf[25], handinf[26]);
+	set_global_position(global_positon);
+	Pose p_globle(handinf[15], handinf[16], handinf[17]);
+	model->set_hand_rotation(p_globle);
 
-void Model::save_trans(char* file) {
-	ofstream f;
-	f.open(file, ios::out);
-	int number_joint = bvh_.GetNumJoint();
-	for (int i = 0; i < number_joint; i++) {
-		f << bvh_.GetJoint(i)->trans << endl;
-	}
-	f.close();
+    //thumb
+	Pose p_thumb_lower(handinf[12], handinf[18], handinf[13]);
+	Pose p_thumb_middle(0, handinf[19], 0);
+	Pose p_thumb_top(0, handinf[14], 0);
+	set_thumbLower_rotation(p_thumb_lower);
+	set_one_rotation(p_thumb_middle, 19);
+	set_one_rotation(p_thumb_top, 20);
 
-}
-void Model::save_local(char* file) {
-	ofstream f;
-	f.open(file, ios::out);
-	int number_joint = bvh_.GetNumJoint();
-	for (int i = 0; i < number_joint; i++) {
-		f << bvh_.GetJoint(i)->local << endl;
-	}
-	f.close();
-}
+	//pinkey
+	Pose p_pinkey_lower(0, handinf[0], handinf[1]);
+	Pose p_pinkey_middle(0, handinf[2], 0);
+	Pose p_pinkey_top(0, handinf[20], 0);
+	set_one_rotation(p_pinkey_lower, 10);
+	set_one_rotation(p_pinkey_middle, 11);
+	set_one_rotation(p_pinkey_middle, 12);
 
-void Model::save_global(char* file) {
-	ofstream f;
-	f.open(file, ios::out);
-	int number_joint = bvh_.GetNumJoint();
-	for (int i = 0; i < number_joint; i++) {
-		f << bvh_.GetJoint(i)->global << endl;
-	}
-	f.close();
+	//ring
+	Pose p_ring_lower(0, handinf[3], handinf[4]);
+	Pose p_ring_middle(0, handinf[5], 0);
+	Pose p_ring_top(0, handinf[21], 0);
+	set_one_rotation(p_ring_lower, 14);
+	set_one_rotation(p_ring_middle, 15);
+	set_one_rotation(p_ring_top, 16);
+
+	//middle
+	Pose p_middle_lower(0, handinf[6], handinf[7]);
+	Pose p_middle_middle(0, handinf[8], 0);
+	Pose p_middle_top(0, handinf[22], 0);
+	set_one_rotation(p_middle_lower, 6);
+	set_one_rotation(p_middle_middle, 7);
+	set_one_rotation(p_middle_top, 8);
+
+	//index
+	Pose p_index_lower(0, handinf[9], handinf[10]);
+	Pose p_index_middle(0, handinf[11], 0);
+	Pose p_index_top(0, handinf[23], 0);
+	set_one_rotation(p_index_lower, 2);
+	set_one_rotation(p_index_middle, 3);
+	set_one_rotation(p_index_top, 4);
+
 }

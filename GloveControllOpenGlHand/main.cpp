@@ -192,13 +192,14 @@ void idle() {
 	mykinect.Collectdata();
 	pointcloud.DepthMatToPointCloud(mykinect.HandsegmentMat);
 
-	Pose pose(0, 0, 0);
-	pose.x = pointcloud.PointCloud_center_x; pose.y = pointcloud.PointCloud_center_y; pose.z = pointcloud.PointCloud_center_z;
-	model->set_global_position(pose);
-	model->set_global_position_center(pose);
+	glovedata.HandinfParams[24] = pointcloud.PointCloud_center_x;
+	glovedata.HandinfParams[25] = pointcloud.PointCloud_center_y;
+	glovedata.HandinfParams[26] = pointcloud.PointCloud_center_z;
+	glovedata.GetGloveData();
 
-	glovedata.GloveControlHand();
-
+	model->GloveParamsConTrollHand(glovedata.HandinfParams);
+	model->forward_kinematic();
+	model->compute_mesh();
 
 	cv::Mat generated_mat = cv::Mat::zeros(424,512, CV_16UC1);
 	projection->set_color_index(model);
