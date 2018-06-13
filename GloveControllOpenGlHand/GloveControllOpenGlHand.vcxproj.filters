@@ -42,6 +42,21 @@
     <ClInclude Include="Projection.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="threadPool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CParticle.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="sut.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="APSO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="global.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BVH.cpp">
@@ -54,6 +69,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="myKinect.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="threadPool.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CParticle.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="APSO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="global.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

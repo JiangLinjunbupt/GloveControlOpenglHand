@@ -148,21 +148,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="APSO.h" />
     <ClInclude Include="BVH.h" />
+    <ClInclude Include="CParticle.h" />
+    <ClInclude Include="global.h" />
     <ClInclude Include="GloveData.h" />
     <ClInclude Include="HandStruct.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="myKinect.h" />
     <ClInclude Include="PointCloud.h" />
     <ClInclude Include="Projection.h" />
+    <ClInclude Include="sut.h" />
+    <ClInclude Include="threadPool.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="Viewer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="APSO.cpp" />
     <ClCompile Include="BVH.cpp" />
+    <ClCompile Include="CParticle.cpp" />
+    <ClCompile Include="global.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="myKinect.cpp" />
+    <ClCompile Include="threadPool.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
