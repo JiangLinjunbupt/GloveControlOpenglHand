@@ -8,10 +8,15 @@
 #include "GloveData.h"
 #include "PointCloud.h"
 #include "Projection.h"
+#include "global.h"
+#include "extern.h"
+
 VisData _data;
 Config config;
 Control control;
-
+/*线程池*/
+ThreadPool threadPool;
+bool begain_PSO = false;
 void MixShowResult(cv::Mat input1, cv::Mat input2);
 
 #pragma region OpenGL
@@ -41,7 +46,10 @@ void keyboardDown(unsigned char key, int x, int y) {
 		config.show_point = true;
 		config.show_skeleton = true;
 		break;
-
+	case 'b':
+		begain_PSO = true;
+	case 'e':
+		begain_PSO = false;
 	case  27:   // ESC
 		exit(0);
 	}
@@ -189,27 +197,62 @@ void mouseMotion(int x, int y) {
 
 /* executed when program is idle */
 void idle() {
-	mykinect.Collectdata();
-	pointcloud.DepthMatToPointCloud(mykinect.HandsegmentMat);
+	if (begain_PSO)
+	{
+		mykinect.Collectdata();
+		pointcloud.DepthMatToPointCloud(mykinect.HandsegmentMat);
 
-	glovedata.HandinfParams[24] = pointcloud.PointCloud_center_x;
-	glovedata.HandinfParams[25] = pointcloud.PointCloud_center_y;
-	glovedata.HandinfParams[26] = pointcloud.PointCloud_center_z;
-	glovedata.GetGloveData();
+		glovedata.HandinfParams[24] = pointcloud.PointCloud_center_x;
+		glovedata.HandinfParams[25] = pointcloud.PointCloud_center_y;
+		glovedata.HandinfParams[26] = pointcloud.PointCloud_center_z;
+		glovedata.GetGloveData();
 
-	model->GloveParamsConTrollHand(glovedata.HandinfParams);
-	model->forward_kinematic();
-	model->compute_mesh();
 
-	cv::Mat generated_mat = cv::Mat::zeros(424,512, CV_16UC1);
-	projection->set_color_index(model);
-	projection->project_3d_to_2d_(model, generated_mat);
-	MixShowResult(mykinect.HandsegmentMat, generated_mat);
+		float *OptimizedParams;
+		poseEstimate(mykinect.HandsegmentMat, glovedata.HandinfParams, model->upper_bound, model->lower_bound, OptimizedParams);
 
-	_data.set(model->vertices_update_, model->faces_);
-	_data.set_color(model->weight_);
-	_data.set_skeleton(model);
-	glutPostRedisplay();
+		model->GloveParamsConTrollHand(OptimizedParams);
+		model->forward_kinematic();
+		model->compute_mesh();
+
+		cv::Mat generated_mat = cv::Mat::zeros(424, 512, CV_16UC1);
+		projection->set_color_index(model);
+		projection->project_3d_to_2d_(model, generated_mat);
+		MixShowResult(mykinect.HandsegmentMat, generated_mat);
+
+		_data.set(model->vertices_update_, model->faces_);
+		_data.set_color(model->weight_);
+		_data.set_skeleton(model);
+
+		delete OptimizedParams;
+		glutPostRedisplay();
+	}
+	else
+	{
+		mykinect.Collectdata();
+		pointcloud.DepthMatToPointCloud(mykinect.HandsegmentMat);
+
+		glovedata.HandinfParams[24] = pointcloud.PointCloud_center_x;
+		glovedata.HandinfParams[25] = pointcloud.PointCloud_center_y;
+		glovedata.HandinfParams[26] = pointcloud.PointCloud_center_z;
+		glovedata.GetGloveData();
+
+
+		model->GloveParamsConTrollHand(glovedata.HandinfParams);
+		model->forward_kinematic();
+		model->compute_mesh();
+
+		cv::Mat generated_mat = cv::Mat::zeros(424, 512, CV_16UC1);
+		projection->set_color_index(model);
+		projection->project_3d_to_2d_(model, generated_mat);
+		MixShowResult(mykinect.HandsegmentMat, generated_mat);
+
+		_data.set(model->vertices_update_, model->faces_);
+		_data.set_color(model->weight_);
+		_data.set_skeleton(model);
+
+		glutPostRedisplay();
+	}
 }
 
 /* initialize OpenGL settings */
@@ -235,6 +278,14 @@ void main(int argc, char** argv) {
 	model->init();
 
 	pointcloud.pointcloud_vector.clear();
+
+	threadPool.setMaxQueueSize(100);
+	int hardware_thread = thread::hardware_concurrency();
+	if (hardware_thread == 0) { hardware_thread = 2; } //当系统信息无法获取时，函数会返回0
+	int threadNum = hardware_thread - 1;
+	cout << "threadNum is：" << threadNum << endl;
+	threadPool.start(threadNum);  //启动线程池，创建多个线程，从任务队列取任务作为线程入口函数，取任务时，需要判断队列是否非空
+
 
 	_data.init(model->vertices_.rows(), model->faces_.rows());
 	_data.set(model->vertices_update_, model->faces_);

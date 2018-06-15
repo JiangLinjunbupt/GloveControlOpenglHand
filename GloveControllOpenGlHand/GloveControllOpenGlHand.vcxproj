@@ -151,6 +151,7 @@
     <ClInclude Include="APSO.h" />
     <ClInclude Include="BVH.h" />
     <ClInclude Include="CParticle.h" />
+    <ClInclude Include="extern.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="GloveData.h" />
     <ClInclude Include="HandStruct.h" />

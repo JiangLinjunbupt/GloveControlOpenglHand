@@ -20,221 +20,53 @@ Model::~Model() {
 
 }
 
+void Model::set_upper_lower_bound()
+{
+	//pinkey
+	upper_bound[0] = 90; lower_bound[0] = -10;    //low  //弯曲
+	upper_bound[1] = 10; lower_bound[1] = -30;           //左右
+	upper_bound[2] = 90; lower_bound[2] = 0;    //middle
+	upper_bound[20] = 90; lower_bound[20] = 0;   //top
 
-void Model::set_dof() {
-	BVH::Joint* joint = bvh_.GetJoint(0);
-	joint->dof[0] = true;  joint->dof[1] = true; joint->dof[2] = true;
-	joint->corresponds[0] = 0; joint->corresponds[1] = 1; joint->corresponds[2] = 2;
+	//ring
+	upper_bound[3] = 90; lower_bound[3] = -10;   //low     //弯曲
+	upper_bound[4] = 10; lower_bound[4] = -20;             //左右
+	upper_bound[5] = 90; lower_bound[5] = 0;     //middle
+	upper_bound[21] = 90; lower_bound[21] = 0;   //top
 
-	joint = bvh_.GetJoint(1);
-	joint->dof[0] = false; joint->dof[1] = true; joint->dof[2] = true;
-	joint->corresponds[1] = 3; joint->corresponds[2] = 4;
+	//middle
+	upper_bound[6] = 90; lower_bound[6] = -10;    //low      //弯曲
+	upper_bound[7] = 0.0; lower_bound[7] = 0.0;               //左右
+	upper_bound[8] = 90; lower_bound[8] = 0;     //middle
+	upper_bound[22] = 90; lower_bound[22] = 0;   //top
 
+	//index
+	upper_bound[9] = 90; lower_bound[9] = -10;     //low      //弯曲
+	upper_bound[10] = 30; lower_bound[10] = -10;              //左右
+	upper_bound[11] = 90; lower_bound[11] = 0;    //middle
+	upper_bound[23] = 90; lower_bound[23] = 0;    //top
 
-	joint = bvh_.GetJoint(2);
-	joint->dof[0] = false; joint->dof[1] = true; joint->dof[2] = false;
-	joint->corresponds[1] = 5;
+	//thumb
+	upper_bound[12] = 60; lower_bound[12] = 0;            //low x
+	upper_bound[13] = 30; lower_bound[13] = -30;            //low z
+	upper_bound[18] = 110; lower_bound[18] = 40;            //low y
 
-	joint = bvh_.GetJoint(3);
-	joint->dof[0] = false; joint->dof[1] = true; joint->dof[2] = false;
-	joint->corresponds[1] = 6;
+	upper_bound[14] = 90; lower_bound[14] = 0;           //top
+	upper_bound[19] = 90; lower_bound[19] = 0;          //middle
 
-	joint = bvh_.GetJoint(4);
-	joint->dof[0] = false; joint->dof[1] = false; joint->dof[2] = false;
+	//global rotation  //这三个我始终没想好
+	//upper_bound[15] = 90; lower_bound[15] = -90;           //x
+	//upper_bound[16] = 90; lower_bound[16] = -180;           //y
+	//upper_bound[17] = 150; lower_bound[17] = -150;            //z
+	upper_bound[15] = 1000; lower_bound[15] = -1000;           //x
+	upper_bound[16] = 1000; lower_bound[16] = -1000;           //y
+	upper_bound[17] = 1000; lower_bound[17] = -1000;            //z
 
-	joint = bvh_.GetJoint(5);
-	joint->dof[0] = false; joint->dof[1] = true; joint->dof[2] = true;
-	joint->corresponds[1] = 7; joint->corresponds[2] = 8;
-
-	joint = bvh_.GetJoint(6);
-	joint->dof[0] = false; joint->dof[1] = true; joint->dof[2] = false;
-	joint->corresponds[1] = 9;
-
-	joint = bvh_.GetJoint(7);
-	joint->dof[0] = false; joint->dof[1] = true; joint->dof[2] = false;
-	joint->corresponds[1] = 10;
-
-	joint = bvh_.GetJoint(8);
-	joint->dof[0] = false; joint->dof[1] = false; joint->dof[2] = false;
-
-	joint = bvh_.GetJoint(9);
-	joint->dof[0] = false; joint->dof[1] = true; joint->dof[2] = true;
-	joint->corresponds[1] = 11; joint->corresponds[2] = 12;
-
-	joint = bvh_.GetJoint(10);
-	joint->dof[0] = false; joint->dof[1] = true; joint->dof[2] = false;
-	joint->corresponds[1] = 13;
-
-	joint = bvh_.GetJoint(11);
-	joint->dof[0] = false; joint->dof[1] = true; joint->dof[2] = false;
-	joint->corresponds[1] = 14;
-
-	joint = bvh_.GetJoint(12);
-	joint->dof[0] = false; joint->dof[1] = false; joint->dof[2] = false;
-
-	joint = bvh_.GetJoint(13);
-	joint->dof[0] = false; joint->dof[1] = true; joint->dof[2] = true;
-	joint->corresponds[1] = 15; joint->corresponds[2] = 16;
-
-	joint = bvh_.GetJoint(14);
-	joint->dof[0] = false; joint->dof[1] = true; joint->dof[2] = false;
-	joint->corresponds[1] = 17;
-
-	joint = bvh_.GetJoint(15);
-	joint->dof[0] = false; joint->dof[1] = true; joint->dof[2] = false;
-	joint->corresponds[1] = 18;
-
-	joint = bvh_.GetJoint(16);
-	joint->dof[0] = false; joint->dof[1] = false; joint->dof[2] = false;
-
-	joint = bvh_.GetJoint(17);
-	joint->dof[0] = false; joint->dof[1] = true; joint->dof[2] = true;
-	joint->corresponds[1] = 19; joint->corresponds[2] = 20;
-
-	joint = bvh_.GetJoint(18);
-	joint->dof[0] = false; joint->dof[1] = false; joint->dof[2] = true;
-	joint->corresponds[1] = 21;
-
-	joint = bvh_.GetJoint(19);
-	joint->dof[0] = false; joint->dof[1] = false; joint->dof[2] = true;
-	joint->corresponds[1] = 22;
-
-	joint = bvh_.GetJoint(20);
-	joint->dof[0] = false; joint->dof[1] = false; joint->dof[2] = false;
-
-
-	joint = bvh_.GetJoint(21);
-	joint->dof[0] = false; joint->dof[1] = true; joint->dof[2] = true;
-	joint->corresponds[1] = 23; joint->corresponds[2] = 24;
-
-	joint = bvh_.GetJoint(22);
-	joint->dof[0] = false; joint->dof[1] = false; joint->dof[2] = false;
-
-
-	// global position is the last three parameters
-	corresponds_[0] = 25;
-	corresponds_[1] = 26;
-	corresponds_[2] = 27;
+	//global position
+	upper_bound[24] = 200; lower_bound[24] = -600;              //x
+	upper_bound[25] = 200; lower_bound[25] = -600;              //y
+	upper_bound[26] = -600; lower_bound[26] = -1100;          //z
 }
-
-void Model::set_upper_lower_bound() {
-	BVH::Joint* joint = bvh_.GetJoint(0);
-	joint->upper.x = 60; joint->lower.x = 0;
-	joint->upper.y = 180; joint->lower.y = 0;
-	joint->upper.z = 90; joint->lower.z = 90;
-
-	joint = bvh_.GetJoint(1);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 90; joint->lower.y = 0;
-	joint->upper.z = 20; joint->lower.z = -20;
-
-	joint = bvh_.GetJoint(2);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 90; joint->lower.y = 0;
-	joint->upper.z = 0; joint->lower.z = 0;
-
-	joint = bvh_.GetJoint(3);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 90; joint->lower.y = 0;
-	joint->upper.z = 0; joint->lower.z = 0;
-
-	joint = bvh_.GetJoint(4);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 0; joint->lower.y = 0;
-	joint->upper.z = 0; joint->lower.z = 0;
-
-	joint = bvh_.GetJoint(5);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 90; joint->lower.y = 0;
-	joint->upper.z = 20; joint->lower.z = -20;
-
-	joint = bvh_.GetJoint(6);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 90; joint->lower.y = 0;
-	joint->upper.z = 0; joint->lower.z = 0;
-
-	joint = bvh_.GetJoint(7);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 90; joint->lower.y = 0;
-	joint->upper.z = 0; joint->lower.z = 0;
-
-	joint = bvh_.GetJoint(8);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 0; joint->lower.y = 0;
-	joint->upper.z = 0; joint->lower.z = 0;
-
-	joint = bvh_.GetJoint(9);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 90; joint->lower.y = 0;
-	joint->upper.z = 20; joint->lower.z = -20;
-
-	joint = bvh_.GetJoint(10);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 90; joint->lower.y = 0;
-	joint->upper.z = 0; joint->lower.z = 0;
-
-	joint = bvh_.GetJoint(11);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 90; joint->lower.y = 0;
-	joint->upper.z = 0; joint->lower.z = 0;
-
-	joint = bvh_.GetJoint(12);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 0; joint->lower.y = 0;
-	joint->upper.z = 0; joint->lower.z = 0;
-
-	joint = bvh_.GetJoint(13);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 90; joint->lower.y = 0;
-	joint->upper.z = 20; joint->lower.z = -20;
-
-	joint = bvh_.GetJoint(14);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 90; joint->lower.y = 0;
-	joint->upper.z = 0; joint->lower.z = 0;
-
-	joint = bvh_.GetJoint(15);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 90; joint->lower.y = 0;
-	joint->upper.z = 0; joint->lower.z = 0;
-
-	joint = bvh_.GetJoint(16);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 0; joint->lower.y = 0;
-	joint->upper.z = 0; joint->lower.z = 0;
-
-	joint = bvh_.GetJoint(17);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 60; joint->lower.y = 0;
-	joint->upper.z = 0; joint->lower.z = -40;
-
-	joint = bvh_.GetJoint(18);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 0; joint->lower.y = 0;
-	joint->upper.z = 0; joint->lower.z = -90;
-
-	joint = bvh_.GetJoint(19);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 0; joint->lower.y = 0;
-	joint->upper.z = 0; joint->lower.z = -90;
-
-	joint = bvh_.GetJoint(20);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 0; joint->lower.y = 0;
-	joint->upper.z = 0; joint->lower.z = 0;
-
-	joint = bvh_.GetJoint(21);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 0; joint->lower.y = -0;
-	joint->upper.z = 10; joint->lower.z = -10;
-
-	joint = bvh_.GetJoint(22);
-	joint->upper.x = 0; joint->lower.x = 0;
-	joint->upper.y = 0; joint->lower.y = 0;
-	joint->upper.z = 0; joint->lower.z = 0;
-
-}
-
 
 void Model::compute_local_inverse() {
 	int num_joint = bvh_.GetNumJoint();
@@ -246,12 +78,11 @@ void Model::compute_local_inverse() {
 }
 
 void Model::init() {
-	set_dof();
+	set_upper_lower_bound();
 	compute_init_global_position();       //这一步承认是以handbone（手掌中心点）的坐标作为手的全局位置。
 	compute_local_coordinate();
 	compute_parent_child_transform();
 	compute_local_inverse();
-	set_upper_lower_bound();
 
 	this->load_faces(".\\model\\handfaces.txt");
 	this->load_vertices(".\\model\\handverts.txt");
@@ -645,7 +476,7 @@ void Model::GloveParamsConTrollHand(float *handinf)
 	Pose global_positon(handinf[24], handinf[25], handinf[26]);
 	set_global_position(global_positon);
 	Pose p_globle(handinf[15], handinf[16], handinf[17]);
-	model->set_hand_rotation(p_globle);
+	set_hand_rotation(p_globle);
 
     //thumb
 	Pose p_thumb_lower(handinf[12], handinf[18], handinf[13]);

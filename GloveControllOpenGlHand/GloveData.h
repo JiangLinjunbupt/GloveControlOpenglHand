@@ -67,6 +67,34 @@ public:
 		HandinfParams[12] = HandinfParams[12] + 40;
 		HandinfParams[13] = HandinfParams[13] - 10;
 
+		HandinfParams[7] = 0.0;
+
+
+		for (int i = 0; i < 24; i++)
+		{
+			if (i == 15 || i == 16 || i == 17)
+			{
+				if (HandinfParams[i] < 0)
+				{
+					HandinfParams[i] = HandinfParams[i] + 360.0;
+				}
+			}
+			else
+			{
+				if (HandinfParams[i] > 200)
+				{
+					HandinfParams[i] = HandinfParams[i] - 360;
+				}
+				else if(HandinfParams[i]<-180)
+				{
+					HandinfParams[i] = HandinfParams[i] + 360;
+				}
+				else
+				{
+					;
+				}
+			}
+		}
 	}
 
 private:

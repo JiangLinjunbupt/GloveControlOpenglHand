@@ -2,9 +2,18 @@
 #include "threadPool.h"
 #include<opencv.hpp>
 #include"CParticle.h"
+#include "Model.h"
+#include "Projection.h"
 #include "APSO.h"
 #include<stdlib.h>  /*stdlib.hÖÐ°üº¬rand()º¯Êý*/
 
 using namespace std;
 using namespace cv;
-void poseEstimate(const Mat& depthSeg, double* output_dof);
+
+const int ParticleDim = 27;
+cv::Mat generated_mat = cv::Mat::zeros(424, 512, CV_16UC1);
+Mat Input_depthMat;
+void poseEstimate(const Mat& depthSeg, const float * initParams, float *upper,float *lower,float* output_dof);
+void reset_upper_lower_Bound(float *original_upper, float *original_lower, 
+	const float *init_params, 
+	float *output_upper, float *output_lower);

@@ -18,7 +18,6 @@ public:
 	Model();
 	Model(char* file);
 	~Model();
-	void set_dof();
 	void set_upper_lower_bound();
 	void forward_kinematic();
 	void compute_local_coordinate();
@@ -41,9 +40,6 @@ public:
 	void compute_mesh();
 
 	Pose get_global_position() { return global_position_; }
-	Pose get_upper_of_angle(int idx) { return bvh_.GetJoint(idx)->upper; }
-	Pose get_lower_of_angle(int idx) { return bvh_.GetJoint(idx)->lower; }
-
 	int  get_number_of_joint() { return bvh_.GetNumJoint(); };
 	int  get_parent_of_joint(int idx) { return bvh_.GetJoint(idx)->parent->index; }
 	bool* get_dof(int idx) { return bvh_.GetJoint(idx)->dof; }
@@ -59,7 +55,8 @@ public:
 	Eigen::MatrixXd vertices_;
 	Eigen::MatrixXd weight_;
 	Eigen::MatrixXd vertices_update_;
-
+	float upper_bound[27];
+	float lower_bound[27];
 
 private:
 	BVH bvh_;
