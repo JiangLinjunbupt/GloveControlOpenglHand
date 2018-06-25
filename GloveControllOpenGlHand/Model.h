@@ -1,7 +1,6 @@
 #pragma once
 #include <Eigen/Dense>
 #include "BVH.h"
-#include "Model.h"
 #include "HandStruct.h"
 
 // the hand model is designed according to the mathematic formulation
@@ -55,6 +54,8 @@ public:
 	Eigen::MatrixXd vertices_;
 	Eigen::MatrixXd weight_;
 	Eigen::MatrixXd vertices_update_;
+
+	float OptimizedParams[27];
 	float upper_bound[27];
 	float lower_bound[27];
 
@@ -69,5 +70,3 @@ private:
 	int num_vertices_;
 	int num_weight_;
 };
-
-static Model* model = nullptr;

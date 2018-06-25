@@ -16,8 +16,10 @@ Model::Model(char* file) {
 }
 
 Model::~Model() {
-
-
+	delete[] OptimizedParams;
+	delete[] upper_bound;
+	delete[] lower_bound;
+	delete[] corresponds_;
 }
 
 void Model::set_upper_lower_bound()

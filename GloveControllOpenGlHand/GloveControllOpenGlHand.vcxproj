@@ -160,7 +160,6 @@
     <ClInclude Include="PointCloud.h" />
     <ClInclude Include="Projection.h" />
     <ClInclude Include="sut.h" />
-    <ClInclude Include="threadPool.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="Viewer.h" />
   </ItemGroup>
@@ -172,7 +171,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="myKinect.cpp" />
-    <ClCompile Include="threadPool.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

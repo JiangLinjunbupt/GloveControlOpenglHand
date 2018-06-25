@@ -44,7 +44,7 @@ void CParticle::velocityUpdate(float weight, float factor1, float factor2, const
 	{
 		float r1 = (float)(rand() % 1001) / 1000.0;   /*[0、1]之间的随机数*/
 		float r2 = (float)(rand() % 1001) / 1000.0;
-		velocity[v] = weight*velocity[v] + factor1 * r1 * (pbest[v] - position[v] + factor2 * r2 * (gbest[v] - position[v]));
+		velocity[v] = weight*velocity[v] + factor1 * r1 * (pbest[v] - position[v]) + factor2 * r2 * (gbest[v] - position[v]);
 
 		/*最大速度限制，与位置限制(即反射墙)配合使用*/
 		if (velocity[v] > Vmax[v]) { velocity[v] = Vmax[v]; }

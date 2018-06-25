@@ -42,9 +42,6 @@
     <ClInclude Include="Projection.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="threadPool.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="CParticle.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -55,6 +52,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="global.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="extern.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -69,9 +69,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="myKinect.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="threadPool.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CParticle.cpp">

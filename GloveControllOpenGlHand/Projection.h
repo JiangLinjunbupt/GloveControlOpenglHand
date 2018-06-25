@@ -3,7 +3,7 @@
 #include<opencv2\core\core.hpp>
 #include<opencv2\highgui\highgui.hpp>
 #include<opencv2\imgproc\imgproc.hpp>
-#include "model.h"
+#include "extern.h"
 #include <vector>
 #include <fstream>
 
@@ -32,7 +32,7 @@ struct Pixel {
 
 //int map_label[NUM_JOINT] = { 1,2,3,4,0,5,6,7,0,8,9,10,0,11,12,13,0,14,15,16,0,17 };
 
-int map_label[NUM_JOINT] = { 1,2,3,4,5,0,6,7,8,0,9,10,11,0,12,13,14,0,15,16,17,0};
+static int map_label[NUM_JOINT] = { 1,2,3,4,5,0,6,7,8,0,9,10,11,0,12,13,14,0,15,16,17,0};
 
 
 class Projection {

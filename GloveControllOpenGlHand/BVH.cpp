@@ -110,7 +110,7 @@ void  BVH::Load(const char * bvh_file_name)
 			new_joint->parent = joint;
 			new_joint->offset[0] = 0.0;  new_joint->offset[1] = 0.0;  new_joint->offset[2] = 0.0;
 			//new_joint->scale = 0.75;
-			new_joint->scale = 1;
+			new_joint->scale = 0.9;
 
 			new_joint->global_position[0] = 0.0;
 			new_joint->global_position[1] = 0.0;

@@ -1,13 +1,14 @@
 #pragma once
 #include<functional>
 #include<vector>
+#include <iostream>
 #include<Windows.h>
 #include <algorithm>
 #include <fstream>
-#include"threadPool.h"
 #include "CParticle.h"
 #include "sut.h"
 #include"extern.h"
+using namespace std;
 
 class APSO
 {

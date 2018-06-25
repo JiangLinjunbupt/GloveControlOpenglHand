@@ -1,4 +1,4 @@
 #pragma once
-#include "threadPool.h"
+#include "Model.h"
 
-extern ThreadPool threadPool;
+extern Model *model;

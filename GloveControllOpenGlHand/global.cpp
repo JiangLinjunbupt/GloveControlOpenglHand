@@ -22,10 +22,9 @@ float  get_objective_func(float* particlePos, float& fitness)
 	}
 	E_golden = sqrt(E_golden);
 
-	fitness = E_golden;
+	fitness = - E_golden;
 	return E_golden;
 }
-
 
 void reset_upper_lower_Bound(float *original_upper, float *original_lower,
 	const float *init_params,
@@ -71,9 +70,9 @@ void reset_upper_lower_Bound(float *original_upper, float *original_lower,
 	output_upper[17] = (init_params[17] + 40) < original_upper[17] ? (init_params[17] + 40) : original_upper[17]; output_lower[17] = (init_params[17] - 40) > original_lower[17] ? (init_params[17] - 40) : original_lower[17];
 
 	//global position
-	output_upper[24] = (init_params[24] + 50) < original_upper[24] ? (init_params[24] + 50) : original_upper[24]; output_lower[24] = (init_params[24] - 50) > original_lower[24] ? (init_params[24] - 50) : original_lower[24];
-	output_upper[25] = (init_params[25] + 50) < original_upper[25] ? (init_params[25] + 50) : original_upper[25]; output_lower[25] = (init_params[25] - 50) > original_lower[25] ? (init_params[25] - 50) : original_lower[25];
-	output_upper[26] = (init_params[26] + 50) < original_upper[26] ? (init_params[26] + 50) : original_upper[26]; output_lower[26] = (init_params[26] - 50) > original_lower[26] ? (init_params[26] - 50) : original_lower[26];
+	output_upper[24] = (init_params[24] + 200) < original_upper[24] ? (init_params[24] + 200) : original_upper[24]; output_lower[24] = (init_params[24] - 200) > original_lower[24] ? (init_params[24] - 200) : original_lower[24];
+	output_upper[25] = (init_params[25] + 200) < original_upper[25] ? (init_params[25] + 200) : original_upper[25]; output_lower[25] = (init_params[25] - 200) > original_lower[25] ? (init_params[25] - 200) : original_lower[25];
+	output_upper[26] = (init_params[26] + 200) < original_upper[26] ? (init_params[26] + 200) : original_upper[26]; output_lower[26] = (init_params[26] - 200) > original_lower[26] ? (init_params[26] - 200) : original_lower[26];
 }
 void poseEstimate(const Mat& depthSeg, const float *initParams, float *upper, float *lower, float* output_dof)
 {
@@ -86,13 +85,18 @@ void poseEstimate(const Mat& depthSeg, const float *initParams, float *upper, fl
 	float *lower_bound = new float[ParticleDim];
 	reset_upper_lower_Bound(upper, lower, initParams, upper_bound, lower_bound);
 
-	SUT sut(ParticleDim, upper_bound, lower_bound, &get_objective_func);    /*目标函数的粒子维度，各维度取值下界、上界*/
-	APSO pso(&sut, 80, 50, initParams);/*sut、粒子总数、迭代数、初始化器产生的初始粒子位置、前一帧跟踪结果*/
+	SUT sut(ParticleDim, lower_bound,upper_bound, &get_objective_func);    /*目标函数的粒子维度，各维度取值下界、上界*/
+	APSO pso(&sut, 100, 50, initParams);/*sut、粒子总数、迭代数、初始化器产生的初始粒子位置、前一帧跟踪结果*/
 
 	//然后调用pso中的优化方法
 
 	pso.getBestPosByEvolve();
-
-	memcpy(output_dof, pso.bestPosition, sizeof(float)*ParticleDim);
+	cout << "the finnal pose is  : " << endl;
+	for (int i = 0;i < ParticleDim;i++)
+	{
+		output_dof[i] = pso.bestPosition[i];
+		cout << pso.bestPosition[i] << endl;
+	}
+	//memcpy(output_dof, pso.bestPosition, sizeof(float)*ParticleDim);
 }
 

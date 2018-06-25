@@ -1,6 +1,6 @@
 #pragma once
 #include <vcclr.h>  
-#include "Model.h"
+#include"extern.h"
 #using "../debug/GloveTool.dll"
 #using "../debug/GloveLibPC.dll"
 using namespace GloveLib;

@@ -29,17 +29,16 @@ void  APSO::getBestPosByEvolve()
 
 	while (true)
 	{
+
 		for (int i = 0; i != population; ++i)
 		{
-			function<void()> task = bind(&SUT::get_fitness, sut, swarm[i]->position, ref(swarm[i]->fitness)); //function绑定类的非静态成员函数
-			threadPool.run(task);
+			sut->get_fitness(swarm[i]->position, ref(swarm[i]->fitness));
 		}
-		threadPool.ensureTaskCompleted(population);
-
 
 		//计算每个粒子的pbest、fitness_pbest、fitness，更新全局极值bestPosition[]数组、全局极值fit_best
 		for (int i = 0; i != population; i++)
 		{
+			cout << swarm[i]->fitness << endl;
 			float fit = swarm[i]->fitness;
 			if (fit >= sut->expected_fitness)
 			{
@@ -60,10 +59,12 @@ void  APSO::getBestPosByEvolve()
 		}
 
 
+		cout << "fit best is :" << fit_best << endl;
+
 		/*Elitist Learning Strategy*/
 		f_value = fCalculate(swarm, bestPosition, fit_best, 2);  //mode=1:全局位移L2范数+角度L1范数; mode=2：L2范数; mode=3：适应值之差的绝对值
 		state = fuzzyDecision(f_value, state);
-
+		cout << "f_value : " << f_value << "  state : " << state << endl;
 		/*如果在收敛阶段stage=3，执行额外策略以避免粒子早熟*/
 		if (state == 3)
 		{
@@ -141,6 +142,7 @@ void  APSO::getBestPosByEvolve()
 		}
 		else
 		{
+			cout << "state is :" << state<<endl;
 			cout << "粒子群所处状态不合理" << endl;
 			exit(EXIT_FAILURE);
 		}
@@ -156,6 +158,7 @@ void  APSO::getBestPosByEvolve()
 			factor2 = factorSum_max / (factor1 + factor2)*factor2;
 		}
 
+		cout << "inertia : " << inertia << "  factor1 : " << factor1 << "   factor2 : " << factor2 << endl;
 		for (auto i : swarm)
 		{
 			i->velocityUpdate(inertia, factor1, factor2, bestPosition);
@@ -232,6 +235,7 @@ float APSO::fCalculate(const vector<CParticle*>& swarm, const float* gbest, floa
 	}
 	else
 	{
+		cout << "model is : " << model << endl;
 		cout << "不存在该粒子距离计算模式" << endl;
 		exit(EXIT_FAILURE);
 	}
@@ -249,6 +253,8 @@ float APSO::fCalculate(const vector<CParticle*>& swarm, const float* gbest, floa
 		if (meanDist > max_dis) { max_dis = meanDist; }
 	}
 
+
+	cout << "max dis :" << max_dis << "    min_dis: " << min_dis << endl;
 	/*计算全局最优粒子到其它粒子的平均距离*/
 	if (mode == 1)
 	{
@@ -303,6 +309,8 @@ float APSO::fCalculate(const vector<CParticle*>& swarm, const float* gbest, floa
 		delete[col] a[i];
 	delete[row] a;
 
+
+	cout << "max dis :" << max_dis << "    min_dis: " << min_dis << endl;
 	return (g_dis - min_dis) / (max_dis - min_dis);
 }
 
@@ -399,10 +407,8 @@ void APSO::swarmInit(vector<CParticle*>& particleSwarm)
 		exit(EXIT_FAILURE);
 	}
 
-
-	float* recommend = new float[sut->dimension];
-
 	particleSwarm[0]->particleInit(posit_initializer);
+	float* recommend = new float[sut->dimension];
 	for (int i = 1; i < population; i++)
 	{
 		for (int v = 0; v < sut->dimension; v++)
@@ -412,7 +418,5 @@ void APSO::swarmInit(vector<CParticle*>& particleSwarm)
 		}
 		particleSwarm[i]->particleInit(recommend);
 	}
-
 	delete[]recommend;
-
 }
