@@ -155,6 +155,7 @@
     <ClInclude Include="global.h" />
     <ClInclude Include="GloveData.h" />
     <ClInclude Include="HandStruct.h" />
+    <ClInclude Include="MergeSort.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="myKinect.h" />
     <ClInclude Include="PointCloud.h" />
@@ -169,6 +170,7 @@
     <ClCompile Include="CParticle.cpp" />
     <ClCompile Include="global.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MergeSort.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="myKinect.cpp" />
   </ItemGroup>

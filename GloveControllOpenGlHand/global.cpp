@@ -85,8 +85,9 @@ void poseEstimate(const Mat& depthSeg, const float *initParams, float *upper, fl
 	float *lower_bound = new float[ParticleDim];
 	reset_upper_lower_Bound(upper, lower, initParams, upper_bound, lower_bound);
 
+	MergeSort ms(100);
 	SUT sut(ParticleDim, lower_bound,upper_bound, &get_objective_func);    /*目标函数的粒子维度，各维度取值下界、上界*/
-	APSO pso(&sut, 100, 50, initParams);/*sut、粒子总数、迭代数、初始化器产生的初始粒子位置、前一帧跟踪结果*/
+	APSO pso(&ms, &sut, 100, 50, initParams);/*sut、粒子总数、迭代数、初始化器产生的初始粒子位置、前一帧跟踪结果*/
 
 	//然后调用pso中的优化方法
 
