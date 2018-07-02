@@ -24,11 +24,6 @@ public:
 
 	float *particle_fitness_save;
 public:
-	APSO(SUT *s, int popu, int iter, const float* pos_initializer) :sut(s), population(popu), iteration(iter), posit_initializer(pos_initializer)
-	{
-		bestPosition = new float[sut->dimension];
-		particle_fitness_save = new float[popu];
-	};
 	APSO(MergeSort *ms,SUT *s, int popu, int iter, const float* pos_initializer) :mergesort(ms),sut(s), population(popu), iteration(iter), posit_initializer(pos_initializer)
 	{
 		bestPosition = new float[sut->dimension];

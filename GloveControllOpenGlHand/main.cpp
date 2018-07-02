@@ -4,19 +4,31 @@
 #include "Viewer.h"
 #include <iostream>
 #include "myKinect.h"
-#include "GloveData.h"
 #include "PointCloud.h"
 #include "Projection.h"
 #include "global.h"
 #include "extern.h"
+#include <windows.h>
+#include <string.h>
+#include <string>
+#include <tchar.h>
+
+#define BUF_SIZE 1024
+TCHAR szName[] = TEXT("Global\\MyFileMappingObject");    //指向同一块共享内存的名字
 
 VisData _data;
 Config config;
 Control control;
+HANDLE hMapFile;
+LPCTSTR pBuf;
 /*线程池*/
+ThreadPool threadPool;
+
 bool begain_PSO = false;
 bool Change_with_glove = true;
 Model *model = nullptr;
+float *GetSharedMemeryPtr;
+float *GetGloveData = new float[27];
 
 void MixShowResult(cv::Mat input1, cv::Mat input2);
 
@@ -206,14 +218,15 @@ void idle() {
 		mykinect.Collectdata();
 		pointcloud.DepthMatToPointCloud(mykinect.HandsegmentMat);
 
-		glovedata.HandinfParams[24] = pointcloud.PointCloud_center_x;
-		glovedata.HandinfParams[25] = pointcloud.PointCloud_center_y;
-		glovedata.HandinfParams[26] = pointcloud.PointCloud_center_z;
-		glovedata.GetGloveData();
+		for (int i = 0; i < 24; i++)
+		{
+			GetGloveData[i] = GetSharedMemeryPtr[i];
+		}
+		GetGloveData[24] = pointcloud.PointCloud_center_x;
+		GetGloveData[25] = pointcloud.PointCloud_center_y;
+		GetGloveData[26] = pointcloud.PointCloud_center_z;
 
-
-		
-		poseEstimate(mykinect.HandsegmentMat, glovedata.HandinfParams, model->upper_bound, model->lower_bound, model->OptimizedParams);
+		poseEstimate(mykinect.HandsegmentMat, GetGloveData, model->upper_bound, model->lower_bound, model->OptimizedParams);
 
 		model->GloveParamsConTrollHand(model->OptimizedParams);
 		model->forward_kinematic();
@@ -236,13 +249,16 @@ void idle() {
 		mykinect.Collectdata();
 		pointcloud.DepthMatToPointCloud(mykinect.HandsegmentMat);
 
-		glovedata.HandinfParams[24] = pointcloud.PointCloud_center_x;
-		glovedata.HandinfParams[25] = pointcloud.PointCloud_center_y;
-		glovedata.HandinfParams[26] = pointcloud.PointCloud_center_z;
-		glovedata.GetGloveData();
 
+		for (int i = 0; i < 24; i++)
+		{
+			GetGloveData[i] = GetSharedMemeryPtr[i];
+		}
+		GetGloveData[24] = pointcloud.PointCloud_center_x;
+		GetGloveData[25] = pointcloud.PointCloud_center_y;
+		GetGloveData[26] = pointcloud.PointCloud_center_z;
 
-		model->GloveParamsConTrollHand(glovedata.HandinfParams);
+		model->GloveParamsConTrollHand(GetGloveData);
 		model->forward_kinematic();
 		model->compute_mesh();
 
@@ -294,7 +310,48 @@ void initGL(int width, int height) {
 #pragma endregion 
 
 
-void main(int argc, char** argv) {
+int main(int argc, char** argv) {
+
+
+	hMapFile = CreateFileMapping(
+		INVALID_HANDLE_VALUE,    // use paging file
+		NULL,                    // default security
+		PAGE_READWRITE,          // read/write access
+		0,                       // maximum object size (high-order DWORD)
+		BUF_SIZE,                // maximum object size (low-order DWORD)
+		szName);                 // name of mapping object
+
+	if (hMapFile == NULL)
+	{
+		_tprintf(TEXT("Could not create file mapping object (%d).\n"),
+			GetLastError());
+		return 1;
+	}
+	pBuf = (LPTSTR)MapViewOfFile(hMapFile,   // handle to map object
+		FILE_MAP_ALL_ACCESS, // read/write permission
+		0,
+		0,
+		BUF_SIZE);
+
+	if (pBuf == NULL)
+	{
+		_tprintf(TEXT("Could not map view of file (%d).\n"),
+			GetLastError());
+
+		CloseHandle(hMapFile);
+
+		return 1;
+	}
+
+	GetSharedMemeryPtr = (float*)pBuf;
+
+
+	threadPool.setMaxQueueSize(100);
+	int hardware_thread = thread::hardware_concurrency();
+	if (hardware_thread == 0) { hardware_thread = 2; } //当系统信息无法获取时，函数会返回0
+	int threadNum = hardware_thread - 1;
+	cout << "threadNum is：" << threadNum << endl;
+	threadPool.start(threadNum);  //启动线程池，创建多个线程，从任务队列取任务作为线程入口函数，取任务时，需要判断队列是否非空
 
 
 	mykinect.InitializeDefaultSensor();
@@ -346,6 +403,7 @@ void main(int argc, char** argv) {
 
 #pragma endregion
 
+	return 0;
 }
 
 

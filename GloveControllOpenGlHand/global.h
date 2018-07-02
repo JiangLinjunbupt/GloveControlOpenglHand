@@ -10,7 +10,7 @@ using namespace std;
 using namespace cv;
 
 static const int ParticleDim = 27;
-static cv::Mat generated_mat = cv::Mat::zeros(424, 512, CV_16UC1);
+static cv::Mat Generated_mat = cv::Mat::zeros(424, 512, CV_16UC1);
 static Mat Input_depthMat;
 void poseEstimate(const Mat& depthSeg, const float * initParams, float *upper,float *lower,float* output_dof);
 void reset_upper_lower_Bound(float *original_upper, float *original_lower, 

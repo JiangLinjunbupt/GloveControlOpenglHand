@@ -8,15 +8,15 @@ float  get_objective_func(float* particlePos, float& fitness)
 	model->compute_mesh();
 
 	projection->set_color_index(model);
-	projection->project_3d_to_2d_(model, generated_mat);
+	projection->project_3d_to_2d_(model, Generated_mat);
 	
 	float E_golden = 0.0;  
 	float threshold = 100.0;      //门限设置位100mm
-	for (int i = 0; i < generated_mat.rows; i++)
+	for (int i = 0; i < Generated_mat.rows; i++)
 	{
-		for (int j = 0; j < generated_mat.cols; j++)
+		for (int j = 0; j < Generated_mat.cols; j++)
 		{
-			float difference = abs(generated_mat.at<ushort>(i, j) - Input_depthMat.at<ushort>(i, j));
+			float difference = abs(Generated_mat.at<ushort>(i, j) - Input_depthMat.at<ushort>(i, j));
 			E_golden += difference < threshold ? pow(difference, 2) : pow(threshold, 2);
 		}
 	}
@@ -92,12 +92,6 @@ void poseEstimate(const Mat& depthSeg, const float *initParams, float *upper, fl
 	//然后调用pso中的优化方法
 
 	pso.getBestPosByEvolve();
-	cout << "the finnal pose is  : " << endl;
-	for (int i = 0;i < ParticleDim;i++)
-	{
-		output_dof[i] = pso.bestPosition[i];
-		cout << pso.bestPosition[i] << endl;
-	}
-	//memcpy(output_dof, pso.bestPosition, sizeof(float)*ParticleDim);
+	memcpy(output_dof, pso.bestPosition, sizeof(float)*ParticleDim);
 }
 

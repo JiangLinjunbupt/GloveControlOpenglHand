@@ -30,9 +30,6 @@
     <ClInclude Include="Viewer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="GloveData.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="myKinect.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -60,6 +57,9 @@
     <ClInclude Include="MergeSort.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ThreadPool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BVH.cpp">
@@ -84,6 +84,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="MergeSort.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadPool.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

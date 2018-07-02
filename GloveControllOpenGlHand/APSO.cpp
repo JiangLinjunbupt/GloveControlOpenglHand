@@ -3,13 +3,12 @@
 
 void  APSO::getBestPosByEvolve()
 {
-
 	default_random_engine e;
 	uniform_real_distribution<double> u(-0.5, 0.5);
 
 	float inertia = 0.5;    /*惯性权重*/
-	float factor1 = 1.5;      /*认知因子*/
-	float factor2 = 2.5;      /*社会因子*/
+	float factor1 = 2;      /*认知因子*/
+	float factor2 = 2;      /*社会因子*/
  
 	float fit_best = -FLT_MAX;   /*FLT_MAX不是float的最小负值，-FLT_MAX才是*/
 
@@ -37,7 +36,16 @@ void  APSO::getBestPosByEvolve()
 
 		for (int i = 0; i != population; ++i)
 		{
-			sut->get_fitness(swarm[i]->position, ref(swarm[i]->fitness));
+			function<void()> task = bind(&SUT::get_fitness, sut, swarm[i]->position, ref(swarm[i]->fitness)); //function绑定类的非静态成员函数
+			threadPool.run(task);
+			/*sut->get_fitness(swarm[i]->position, ref(swarm[i]->fitness));
+			this->particle_fitness_save[i] = swarm[i]->fitness;*/
+		}
+
+		threadPool.ensureTaskCompleted(population);
+
+		for (int i = 0; i != population; ++i)
+		{
 			this->particle_fitness_save[i] = swarm[i]->fitness;
 		}
 
